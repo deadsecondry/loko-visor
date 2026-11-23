@@ -1,0 +1,744 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>РельсЛаб — киберфизический железнодорожный полигон</title>
+<meta name="description" content="Модульный программно-аппаратный образовательный комплекс на базе физической модели железной дороги.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;700;800&family=Onest:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles/tokens.css">
+<link rel="stylesheet" href="styles/base.css">
+<link rel="stylesheet" href="styles/console.css">
+<link rel="stylesheet" href="styles/content.css">
+<link rel="stylesheet" href="styles/responsive.css">
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap top-in">
+    <a class="brand" href="#top" aria-label="РельсЛаб, наверх">
+      <svg width="24" height="24" viewBox="0 0 26 26" aria-hidden="true"><rect x="3" y="5" width="20" height="16" rx="7" fill="none" stroke="currentColor" stroke-width="2"/><path d="M8 13h10" stroke="var(--amber)" stroke-width="2.4"/></svg>
+      РельсЛаб
+      <em>ПОЛИГОН</em>
+    </a>
+
+    <nav class="nav" aria-label="Разделы">
+      <a href="#problem">Проблема</a>
+      <a href="#kit">Комплект</a>
+      <a href="#fields">Направления</a>
+      <a href="#modules">Модули</a>
+      <a href="#business">Бизнес</a>
+      <a href="#status">Статус</a>
+    </nav>
+
+    <div class="sysbar" aria-label="Состояние систем">
+      <span class="sys on" data-sys="scb"><i></i>СЦБ<b>активна</b></span>
+      <span class="sys on" data-sys="atp"><i></i>АТП<b>вкл</b></span>
+      <span class="sys" data-sys="cv"><i></i>CV<b>выкл</b></span>
+    </div>
+
+    <div class="top-tools">
+      <span class="clock" id="clock">--:--:--</span>
+      <button class="tool-btn" id="snd-btn" type="button" aria-pressed="false" title="Звук реле, тифона и стук колёс">Звук: выкл</button>
+      <button class="tool-btn" id="thm-btn" type="button" title="Переключить тему пульта">Тема</button>
+    </div>
+  </div>
+</header>
+
+<main id="top">
+
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div class="hero-copy">
+      <p class="kicker"><span class="n">01</span> Киберфизический полигон</p>
+      <h1>Одна железная дорога. Все цифровые технологии сразу.</h1>
+      <p class="lead">Модульный программно-аппаратный комплекс на базе физической модели железной дороги. Студенты программируют алгоритмы движения, обучают модели компьютерного зрения, подключают датчики и проверяют решения на реальных поездах.</p>
+      <div class="marks">
+        <span class="mark"><i class="dot real"></i>Работает: прототип с IoT-управлением</span>
+        <span class="mark"><i class="dot next"></i>Следующий этап: компьютерное зрение</span>
+      </div>
+    </div>
+
+    <dl class="spec" aria-label="Параметры полигона">
+      <div><dt>Полигон</dt><dd>2 кольца</dd></div>
+      <div><dt>Составы</dt><dd>3 <small>до 8 ваг.</small></dd></div>
+      <div><dt>Блок-участки</dt><dd>16</dd></div>
+      <div><dt>Стрелки</dt><dd>2 <small>сетевые</small></dd></div>
+      <div><dt>Масштаб</dt><dd>H0 · 1:87</dd></div>
+    </dl>
+  </div>
+</section>
+
+<section class="band tight" aria-labelledby="sim-title">
+  <div class="wrap">
+    <div class="sim-head">
+      <p class="kicker"><span class="n">02</span> Пульт диспетчера</p>
+      <h2 id="sim-title">Попробуйте вести поезд</h2>
+      <p class="muted" id="sim-text-p">Вы управляете поездом А. Меняйте длину составов и направление хода, переключайте стрелки, закрывайте участки кликом по светофорам, включайте камеру ИИ, лазерный сканер и скрипты диспетчера.</p>
+    </div>
+
+    <div class="tabs" role="tablist" aria-label="Режим симуляции">
+      <button class="tab on" id="tab-preset" role="tab" aria-selected="true" aria-controls="sim-preset" type="button">Готовый макет</button>
+      <button class="tab" id="tab-build" role="tab" aria-selected="false" aria-controls="sim-build" type="button">Конструктор</button>
+    </div>
+    <p class="muted sim-note" id="sim-text-b" hidden>Постройте свою дорогу: рисуйте путь по сетке, подводите ответвления, чтобы появились стрелки, задавайте длину составов и запускайте поезда.</p>
+
+    <div class="console" id="sim-preset" role="tabpanel" aria-labelledby="tab-preset">
+      <div>
+        <div class="stage">
+          <div class="stage-head">
+            <span class="stage-code">Полигон 01 · H0 1:87</span>
+            <span class="stage-live" id="live-preset"><i></i>LIVE</span>
+          </div>
+          <svg id="stage" viewBox="0 0 800 430" role="group" aria-label="Симуляция макета: два кольца, две стрелки, три поезда">
+            <defs>
+              <polygon id="beam-shape" points="8,0 54,-14 54,14"/>
+            </defs>
+            <g class="bed">
+              <path id="p-outer" d="M150,40 H650 A90,90 0 0 1 740,130 V290 A90,90 0 0 1 650,380 H150 A90,90 0 0 1 60,290 V130 A90,90 0 0 1 150,40 Z"/>
+              <path id="p-inner" d="M250,130 H550 A60,60 0 0 1 610,190 V230 A60,60 0 0 1 550,290 H250 A60,60 0 0 1 190,230 V190 A60,60 0 0 1 250,130 Z"/>
+              <path id="p-c1" d="M330,40 C390,40 410,130 470,130"/>
+              <path id="p-c2" d="M470,290 C410,290 390,380 330,380"/>
+            </g>
+            <g id="g-ties"></g>
+            <g id="g-blk"></g>
+            <g id="g-route"></g>
+            <g id="g-lamp"></g>
+            <g id="g-laser" hidden>
+              <line id="laser-beam" x1="400" y1="362" x2="400" y2="398" class="laser-beam"/>
+              <rect x="394" y="356" width="12" height="7" rx="1.5" class="laser-post"/>
+              <rect x="394" y="397" width="12" height="7" rx="1.5" class="laser-post"/>
+              <text x="400" y="351" class="laser-lbl">ЛАЗЕРНЫЙ ПОСТ · О5</text>
+            </g>
+            <g id="g-obs"></g>
+            <g id="g-trains"></g>
+            <g id="g-cv" hidden></g>
+            <circle id="crashmark" class="crash" r="18" cx="0" cy="0"/>
+            <g id="g-sw">
+              <g class="swm" id="sw1m" role="button" tabindex="0" aria-label="Стрелка 1">
+                <title>Стрелка 1: переключить</title>
+                <circle cx="330" cy="40" r="11"/><text x="330" y="44">1</text>
+              </g>
+              <g class="swm" id="sw2m" role="button" tabindex="0" aria-label="Стрелка 2">
+                <title>Стрелка 2: переключить</title>
+                <circle cx="470" cy="290" r="11"/><text x="470" y="294">2</text>
+              </g>
+            </g>
+            <text class="cnt" x="400" y="214" id="cnt">0</text>
+            <text class="cnt-l" x="400" y="236" id="cntl">БЛОКОВ ЗАНЯТО ИЗ 16</text>
+          </svg>
+        </div>
+
+        <div class="legend" aria-label="Обозначения">
+          <span><i class="dot" style="background:var(--go)"></i>блок свободен (клик по светофору — закрыть)</span>
+          <span><i class="dot" style="background:var(--stop)"></i>блок занят / закрыт</span>
+          <span><i class="sw" style="background:var(--amber)"></i>поезд А, вы</span>
+          <span><i class="sw" style="background:var(--t-a)"></i><i class="sw" style="background:var(--t-b)"></i>автономные</span>
+        </div>
+
+        <div class="tele">
+          <div class="tele-card" aria-live="off">
+            <div class="tele-head">
+              <span id="tele-title">Телеметрия: Поезд А</span>
+              <b id="tele-mode">ТЯГА · ВПЕРЁД</b>
+            </div>
+            <div class="tele-grid">
+              <div class="tele-kv"><span>Скорость H0</span><b id="tele-spd">0 мм/с</b></div>
+              <div class="tele-kv"><span>Пробег</span><b id="tele-dist">0.0 м</b></div>
+              <div class="tele-kv"><span>Энергия</span><b id="tele-nrg">0.0 Вт·ч</b></div>
+            </div>
+          </div>
+
+          <div class="tele-card" id="laser-card">
+            <div class="tele-head">
+              <span>Диагностика пар</span>
+              <b id="laser-badge">ОЖИДАНИЕ</b>
+            </div>
+            <p class="tele-msg" id="laser-msg">Включите «Лазерный пост», чтобы измерять геометрию гребней и габарит составов при проходе блока О5.</p>
+          </div>
+        </div>
+
+        <div class="lab-box">
+          <div class="lab-bar">
+            <div class="row" style="gap:8px">
+              <span class="lab-title">Контроллер</span>
+              <div class="mode-pill-grp" role="group" aria-label="Режим программирования">
+                <button class="mode-pill on" id="lang-py" type="button" aria-pressed="true">Python API</button>
+                <button class="mode-pill" id="lang-blk" type="button" aria-pressed="false">Блоки</button>
+              </div>
+            </div>
+            <div class="lab-tabs" role="group" aria-label="Пресеты алгоритмов">
+              <button class="lab-pill on" type="button" data-algo="scb">01_scb_base</button>
+              <button class="lab-pill" type="button" data-algo="green">02_green_wave</button>
+              <button class="lab-pill" type="button" data-algo="laser">03_laser_diag</button>
+              <button class="lab-pill" type="button" data-algo="eco">04_eco_drive</button>
+            </div>
+          </div>
+          <div class="lab-body">
+            <textarea class="code-area" id="algo-code" spellcheck="false" aria-label="Код алгоритма диспетчера"></textarea>
+            <div class="blocks-area" id="algo-blocks" hidden>
+              <div class="blk-row">
+                <span class="blk-kw">КОГДА</span>
+                <select class="blk-sel" id="blk-cond" aria-label="Условие срабатывания">
+                  <option value="scb">блок-участок впереди занят или закрыт</option>
+                  <option value="green">Поезд А движется по внешнему кольцу (О)</option>
+                  <option value="laser">лазерный пост О5 зафиксировал гребень &gt; 1.5 мм</option>
+                  <option value="eco">активен энергосберегающий график движения</option>
+                </select>
+              </div>
+              <div class="blk-row act">
+                <span class="blk-kw">ТОГДА</span>
+                <select class="blk-sel" id="blk-act" aria-label="Действие исполнительных механизмов">
+                  <option value="scb">плавно снизить тягу и удержать интервал СЦБ</option>
+                  <option value="green">переключить стрелки 1–2 и увести Б, В на внутр. кольцо</option>
+                  <option value="laser">ограничить скорость до 45% и направить в депо</option>
+                  <option value="eco">ограничить ускорение 62% + включить рекуперацию 75%</option>
+                </select>
+              </div>
+              <div class="blk-row meta">
+                <span class="blk-kw">СЕТЬ IoT</span>
+                <span>опрос датчиков каждые 50 мс · автогенерация Python-кода</span>
+                <span class="stage-tag">перспектива</span>
+              </div>
+            </div>
+            <div class="lab-foot">
+              <span class="lab-status" id="algo-status">Активен: Базовая СЦБ и автоблокировка</span>
+              <div class="btns" style="flex:none">
+                <button class="btn pri" id="algo-run" type="button">Применить</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <p class="caption">Это симуляция целевого поведения. Попробуйте включить реверс, нажать на светофор для имитации ремонта пути или запустить алгоритм «Зелёная волна», чтобы автономные составы уступали дорогу Поезду А.</p>
+      </div>
+
+      <aside class="panel" aria-label="Пульт управления">
+        <div id="alert" class="alert" role="alert" hidden>Столкновение. Включите защиту и нажмите «Сброс».</div>
+
+        <div class="panel-tabs" role="tablist" aria-label="Разделы пульта">
+          <button class="ptab on" type="button" role="tab" aria-selected="true" data-ptab="drive">Тяга</button>
+          <button class="ptab" type="button" role="tab" aria-selected="false" data-ptab="route">Путь</button>
+          <button class="ptab" type="button" role="tab" aria-selected="false" data-ptab="sense">Сенсоры</button>
+          <button class="ptab" type="button" role="tab" aria-selected="false" data-ptab="log">Журнал</button>
+        </div>
+
+        <div class="panel-body">
+          <div class="pane on" data-pane="drive" role="tabpanel" aria-label="Тяга">
+            <div class="field">
+              <h3>Поезд А · ручное управление</h3>
+              <div class="row between">
+                <label for="spd">Скорость</label>
+                <span class="val" id="spdv">55%</span>
+              </div>
+              <input type="range" id="spd" min="0" max="100" value="55" step="1">
+
+              <div class="dir-toggle" role="group" aria-label="Направление движения Поезда А">
+                <button class="dir-btn on" id="dir-fwd" type="button" aria-pressed="true">Вперёд ▶</button>
+                <button class="dir-btn" id="dir-rev" type="button" aria-pressed="false">◀ Назад</button>
+              </div>
+
+              <div class="row between">
+                <label for="lenA">Длина состава</label>
+                <div class="stepper">
+                  <button class="step-btn" id="lenA-dec" type="button" aria-label="Уменьшить состав А">−</button>
+                  <span class="step-num" id="lenAv">3 ваг.</span>
+                  <button class="step-btn" id="lenA-inc" type="button" aria-label="Увеличить состав А">+</button>
+                </div>
+              </div>
+              <input type="range" id="lenA" min="1" max="8" value="3" step="1">
+              <div class="sub-meta" id="lenA-meta">1 лок. + 2 ваг. · ~48 см (H0) · масса 120 т</div>
+
+              <div class="btns">
+                <button class="btn" id="stop" type="button">Стоп</button>
+                <button class="btn pri" id="play" type="button">Пауза</button>
+                <button class="btn" id="horn" type="button" title="Подать звуковой сигнал локомотива">Гудок</button>
+                <button class="btn" id="reset" type="button">Сброс</button>
+              </div>
+            </div>
+
+            <label class="chk" for="atp"><input type="checkbox" id="atp" checked>Защита от столкновений: торможение перед занятым блоком</label>
+          </div>
+
+          <div class="pane" data-pane="route" role="tabpanel" aria-label="Путь">
+            <div class="field">
+              <h3>Стрелочные переводы</h3>
+              <div class="btns col">
+                <button class="btn" id="sw1b" type="button">Стрелка 1</button>
+                <button class="btn" id="sw2b" type="button">Стрелка 2</button>
+              </div>
+              <label class="chk" for="disp"><input type="checkbox" id="disp" checked>Автодиспетчер переключает стрелки</label>
+            </div>
+
+            <div class="field">
+              <h3>Составы</h3>
+              <ul class="tstate" id="tstate"></ul>
+            </div>
+          </div>
+
+          <div class="pane" data-pane="sense" role="tabpanel" aria-label="Сенсоры">
+            <div class="field">
+              <h3>Датчики</h3>
+              <div class="btns">
+                <button class="btn" id="cv-btn" type="button" aria-pressed="false">Камера ИИ</button>
+                <button class="btn" id="laser-btn" type="button" aria-pressed="false">Лазерный пост</button>
+              </div>
+              <button class="btn" id="obs-btn" type="button" style="text-align:center">Помеха на пути</button>
+            </div>
+
+            <div class="cv-lab">
+              <div class="cv-lab-hd">
+                <span>Датасет · окрас локомотива А</span>
+                <span class="sub-meta" id="cv-cls-state">класс в базе</span>
+              </div>
+              <div class="swatches" role="group" aria-label="Выбор окраса локомотива А">
+                <button class="swatch-btn on" type="button" data-liv="amber"><i class="swatch-dot" style="background:var(--amber)"></i>Штатн.</button>
+                <button class="swatch-btn" type="button" data-liv="cobalt"><i class="swatch-dot" style="background:#3b82f6"></i>Экспресс</button>
+                <button class="swatch-btn" type="button" data-liv="emerald"><i class="swatch-dot" style="background:#10b981"></i>Маневр.</button>
+                <button class="swatch-btn" type="button" data-liv="crimson"><i class="swatch-dot" style="background:#ef4444"></i>Спец.</button>
+              </div>
+              <div class="train-bar" id="cv-train-bar" hidden><div class="train-fill" id="cv-train-fill"></div></div>
+              <button class="btn" id="cv-retrain" type="button" style="text-align:center;font-size:.75rem" disabled>Модель знает этот окрас (99%)</button>
+            </div>
+          </div>
+
+          <div class="pane" data-pane="log" role="tabpanel" aria-label="Журнал">
+            <div class="field">
+              <h3>Журнал диспетчера</h3>
+              <ol class="log" id="log" aria-live="polite"></ol>
+            </div>
+            <p class="hint">Записи фиксируют действия диспетчера, срабатывания СЦБ и события диагностики. Клик по светофору на сцене закрывает блок на ремонт.</p>
+          </div>
+        </div>
+      </aside>
+    </div>
+
+    <div class="console" id="sim-build" hidden role="tabpanel" aria-labelledby="tab-build">
+      <div>
+        <div class="stage">
+          <div class="stage-head">
+            <span class="stage-code">Конструктор · сетка 16×9</span>
+            <span class="stage-live" id="live-build"><i></i>LIVE</span>
+          </div>
+          <svg id="cstage" viewBox="0 0 800 450" role="group" aria-label="Конструктор: сетка для построения путей и стрелок">
+            <defs>
+              <polygon id="c-beam-shape" points="8,0 48,-12 48,12"/>
+            </defs>
+          </svg>
+        </div>
+        <div class="legend" aria-label="Обозначения">
+          <span><i class="sw" style="background:var(--rail)"></i>путь</span>
+          <span><i class="dot" style="background:var(--amber)"></i>стрелка (нажмите, чтобы переключить)</span>
+          <span><i class="sw" style="background:var(--stop)"></i>тупик или занятый блок</span>
+          <span><i class="sw" style="background:var(--amber)"></i>поезд А, вы</span>
+          <span><i class="sw" style="background:var(--t-a)"></i><i class="sw" style="background:var(--t-b)"></i>автономные</span>
+        </div>
+        <p class="caption" id="c-status" aria-live="off"></p>
+        <p class="caption">Каждая клетка пути работает как блок-участок: длинный состав занимает несколько клеток сразу и блокирует стрелки под хвостом.</p>
+      </div>
+
+      <aside class="panel" aria-label="Пульт конструктора">
+        <div id="c-alert" class="alert" role="alert" hidden></div>
+
+        <div class="panel-tabs" style="grid-template-columns:1fr">
+          <button class="ptab on" type="button" disabled style="cursor:default">Конструктор пути</button>
+        </div>
+
+        <div class="panel-body">
+          <button class="btn pri" id="c-mode" type="button" style="text-align:center">Запустить поезда</button>
+
+          <div id="c-edit" class="field">
+            <h3>Инструменты</h3>
+            <div class="btns">
+              <button class="btn pri" id="c-draw" type="button" aria-pressed="true">Рисовать</button>
+              <button class="btn" id="c-erase" type="button" aria-pressed="false">Стереть</button>
+            </div>
+            <div class="btns">
+              <button class="btn" id="c-sample" type="button">Пример</button>
+              <button class="btn" id="c-clear" type="button">Очистить</button>
+            </div>
+            <div class="row between" style="margin-top:2px">
+              <label for="c-init-len">Длина составов</label>
+              <span class="val" id="c-init-lenv">3 ваг.</span>
+            </div>
+            <input type="range" id="c-init-len" min="1" max="8" value="3" step="1">
+            <p class="hint">Ведите мышью или пальцем от клетки к клетке: между ними появится путь. Подведите ответвление к любому пути — на развилке появится стрелка.</p>
+          </div>
+
+          <div id="c-run" class="field" hidden>
+            <h3>Поезд А · ручное управление</h3>
+            <div class="row between">
+              <label for="c-spd">Скорость</label>
+              <span class="val" id="c-spdv">55%</span>
+            </div>
+            <input type="range" id="c-spd" min="0" max="100" value="55" step="1">
+
+            <div class="row between">
+              <label for="c-lenA">Длина состава А</label>
+              <div class="stepper">
+                <button class="step-btn" id="c-lenA-dec" type="button" aria-label="Уменьшить состав А">−</button>
+                <span class="step-num" id="c-lenAv">3 ваг.</span>
+                <button class="step-btn" id="c-lenA-inc" type="button" aria-label="Увеличить состав А">+</button>
+              </div>
+            </div>
+            <input type="range" id="c-lenA" min="1" max="8" value="3" step="1">
+
+            <div class="btns">
+              <button class="btn" id="c-stop" type="button">Стоп</button>
+              <button class="btn pri" id="c-play" type="button">Пауза</button>
+              <button class="btn" id="c-horn" type="button">Гудок</button>
+              <button class="btn" id="c-reset" type="button">Сброс</button>
+            </div>
+            <button class="btn" id="c-cv-btn" type="button" aria-pressed="false" style="text-align:center">Камера ИИ (CV)</button>
+            <label class="chk" for="c-atp"><input type="checkbox" id="c-atp" checked>Защита от столкновений</label>
+            <label class="chk" for="c-disp"><input type="checkbox" id="c-disp" checked>Автодиспетчер стрелок</label>
+          </div>
+
+          <div class="field">
+            <h3>Стрелки</h3>
+            <div class="btns col" id="c-swl"></div>
+          </div>
+
+          <div id="c-run2" class="field" hidden>
+            <h3>Составы</h3>
+            <ul class="tstate" id="c-tstate"></ul>
+            <h3 style="margin-top:6px">Журнал</h3>
+            <ol class="log" id="c-log" aria-live="polite"></ol>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<section class="band alt" id="problem">
+  <div class="wrap">
+    <div class="split">
+      <header>
+        <p class="kicker"><span class="n">03</span> Проблема</p>
+        <h2>Выпускникам не хватает практики</h2>
+      </header>
+      <div>
+        <div class="stats">
+          <div class="stat">
+            <div class="num">75<em>%</em></div>
+            <p>высокотехнологичных компаний считают выпускников инженерных специальностей недостаточно подготовленными к практической работе.</p>
+          </div>
+          <div class="stat">
+            <div class="num">62<em>%</em></div>
+            <p>отмечают, что выпускники с трудом самостоятельно решают профессиональные задачи из-за нехватки практики.</p>
+          </div>
+        </div>
+        <p class="source">Источник: исследование ИНТЦ «Сириус» и Общероссийского народного фронта, опубликовано Минобрнауки России в 2025 году. Опрошено 500 компаний.</p>
+        <div class="prose" style="margin-top:28px">
+          <p class="muted">Особенно не хватает специалистов, которые умеют соединять программирование, искусственный интеллект, компьютерное зрение, интернет вещей и автоматизацию в единую киберфизическую систему.</p>
+          <p class="muted">Для этого нужны инструменты, на которых студент сам разрабатывает, внедряет и тестирует решения на физическом объекте.</p>
+        </div>
+        <div class="hyp"><i class="dot later"></i><p>Гипотеза к проверке: насколько вузам и колледжам нужны универсальные модульные комплексы. Это выясняют интервью с образовательными организациями.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="band" id="kit">
+  <div class="wrap">
+    <div class="split">
+      <header>
+        <p class="kicker"><span class="n">04</span> Комплект</p>
+        <h2>Три части одного продукта</h2>
+        <p class="muted" style="font-size:.9375rem">Целевая комплектация для образовательных организаций. Что из этого уже работает, показано в разделе «Статус».</p>
+      </header>
+      <div>
+        <dl class="rows">
+          <div>
+            <dt>Аппаратная часть</dt>
+            <dd><p>Рельсовые пути, стрелочные переводы с сетевым управлением, локомотивы с собственной электроникой, контроллеры, камеры, датчики и исполнительные механизмы.</p></dd>
+          </div>
+          <div>
+            <dt>Программная платформа</dt>
+            <dd><p>Интерфейсы управления, инструменты программирования (текстовое и блочное), интеграция IoT, компьютерного зрения и алгоритмов автоматизации, подключение пользовательских модулей.</p></dd>
+          </div>
+          <div>
+            <dt>Образовательный контент</dt>
+            <dd><p>Готовые лабораторные работы, методические материалы и практические задания разной сложности для разных специальностей.</p></dd>
+          </div>
+        </dl>
+
+        <div class="cfg-box">
+          <div class="row between">
+            <h3>Конфигуратор лаборатории</h3>
+            <span class="sub-meta">оценка состава стенда</span>
+          </div>
+          <div class="cfg-grid">
+            <label class="cfg-opt"><input type="checkbox" id="cfg-base" checked disabled><div><b>Базовый полигон</b><span class="muted">2 кольца, 2 сетевые стрелки, 2 локомотива, сервер СЦБ</span></div></label>
+            <label class="cfg-opt"><input type="checkbox" id="cfg-cv" checked><div><b>Модуль CV</b><span class="muted">2 верхние камеры, вычислитель ИИ, разметка датасетов</span></div></label>
+            <label class="cfg-opt"><input type="checkbox" id="cfg-laser"><div><b>Диагностический пост</b><span class="muted">Лазерный сканер геометрии колёсных пар и габарита</span></div></label>
+            <label class="cfg-opt"><input type="checkbox" id="cfg-ext"><div><b>Расширение парка</b><span class="muted">Дополнительные локомотивы, вагоны и 2 стрелки</span></div></label>
+          </div>
+          <div class="cfg-res">
+            <div class="cfg-stat"><span>Рабочих мест</span><b id="cfg-seats">6–8 чел.</b></div>
+            <div class="cfg-stat"><span>Лабораторных работ</span><b id="cfg-labs">18 тем</b></div>
+            <div class="cfg-stat"><span>Направлений</span><b id="cfg-specs">4 из 6</b></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="band alt" id="fields">
+  <div class="wrap">
+    <div class="split">
+      <header>
+        <p class="kicker"><span class="n">05</span> Направления</p>
+        <h2>Шесть специальностей, одна дорога</h2>
+        <p class="muted" style="font-size:.9375rem">Нажмите кнопку под любым направлением, чтобы сразу запустить соответствующий лабораторный сценарий на макете.</p>
+      </header>
+      <div class="split-main">
+      <dl class="rows">
+        <div>
+          <dt>Программирование и разработка ПО</dt>
+          <dd>
+            <p>Алгоритмы движения поездов, логика стрелок, интерфейсы управления, обмен данными между устройствами по сети.</p>
+            <button class="scen-btn" type="button" data-launch="green">Запустить: «Зелёная волна» ↑</button>
+          </dd>
+        </div>
+        <div>
+          <dt>ИИ, данные и компьютерное зрение</dt>
+          <dd>
+            <p>Собственные датасеты, новые классы объектов (например, перекрашенный локомотив), обучение моделей, оценка качества распознавания и управление макетом по его результатам.</p>
+            <button class="scen-btn" type="button" data-launch="cv">Запустить: «Детекция помехи CV» ↑</button>
+          </dd>
+        </div>
+        <div>
+          <dt>Автоматизация и управление процессами</dt>
+          <dd>
+            <p>Работа светофоров и стрелок, сигнализация и оповещение, алгоритмы предотвращения конфликтов.</p>
+            <button class="scen-btn" type="button" data-launch="block">Запустить: «Отказ рельсовой цепи» ↑</button>
+          </dd>
+        </div>
+        <div>
+          <dt>Электроника, робототехника, приборостроение</dt>
+          <dd>
+            <p>Новые датчики и исполнительные механизмы. Например, диагностический пост с лазерным измерением геометрии подвижного состава.</p>
+            <button class="scen-btn" type="button" data-launch="laser">Запустить: «Лазерный сканер» ↑</button>
+          </dd>
+        </div>
+        <div>
+          <dt>Транспорт и логистика</dt>
+          <dd>
+            <p>Маршрутизация, диспетчеризация, пропускная способность. Один студент ведёт поезд вручную, остальные идут автономно, и движение остаётся безопасным.</p>
+            <button class="scen-btn" type="button" data-launch="heavy">Запустить: «Тяжеловесный состав» ↑</button>
+          </dd>
+        </div>
+        <div>
+          <dt>Системная инженерия</dt>
+          <dd>
+            <p>Связка железа, программ, IoT, алгоритмов управления и машинного обучения в одну работающую систему.</p>
+            <button class="scen-btn" type="button" data-launch="eco">Запустить: «Эко-вождение» ↑</button>
+          </dd>
+        </div>
+      </dl>
+
+      <div class="task-box">
+        <div class="row between">
+          <div>
+            <p class="kicker" style="margin-bottom:6px"><span class="n">06</span> Открытая среда</p>
+            <h3 style="font-family:var(--f-display);font-size:1rem">Конструктор собственной задачи</h3>
+          </div>
+          <span class="sub-meta">свои кейсы для студентов и преподавателей</span>
+        </div>
+        <div class="task-grid">
+          <div class="task-fld">
+            <label for="tsk-lvl">Уровень сложности</label>
+            <select class="task-sel" id="tsk-lvl">
+              <option value="iot">1. Базовый IoT и СЦБ (прототип)</option>
+              <option value="cv" selected>2. Алгоритмы и CV (следующий этап)</option>
+              <option value="multi">3. Мультиагентная логистика (перспектива)</option>
+            </select>
+          </div>
+          <div class="task-fld">
+            <label for="tsk-obj">Объект и состав</label>
+            <select class="task-sel" id="tsk-obj">
+              <option value="std">Стандартный состав А (3 ваг.)</option>
+              <option value="heavy">Тяжеловесный состав А (6 ваг.)</option>
+              <option value="repaint">Перекрашенный спецсостав (новый класс CV)</option>
+            </select>
+          </div>
+          <div class="task-fld">
+            <label for="tsk-mod">Датчики и алгоритм</label>
+            <select class="task-sel" id="tsk-mod">
+              <option value="cv_obs">Камера ИИ + детекция помехи на пути</option>
+              <option value="laser_depot">Лазерный пост О5 + отвод дефекта в депо</option>
+              <option value="green_wave">Приоритетный коридор «Зелёная волна»</option>
+              <option value="eco_regen">Эко-график с рекуперацией энергии</option>
+            </select>
+          </div>
+        </div>
+        <div class="task-fld">
+          <label for="tsk-goal">Формулировка задания для журнала</label>
+          <input class="task-inp" id="tsk-goal" type="text" value="Обучить CV распознавать новый окрас локомотива и безопасно провести состав мимо помехи">
+        </div>
+        <div class="task-preview">
+          <div class="row between">
+            <b id="tsk-badge">Сценарий готов к проверке на полигоне</b>
+            <button class="btn pri" id="tsk-launch" type="button">Запустить на макете ↑</button>
+          </div>
+          <span id="tsk-summary">Включит Камеру ИИ, перекрасит локомотив в новый класс, поставит помеху на пути и запишет задание в журнал.</span>
+        </div>
+      </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="band" id="modules">
+  <div class="wrap">
+    <div class="split">
+      <header>
+        <p class="kicker"><span class="n">07</span> Модульность</p>
+        <h2>Комплект растёт вместе с курсом</h2>
+        <p class="muted" style="font-size:.9375rem">Базовая комплектация работает сразу. Расширять её можно без замены оборудования.</p>
+      </header>
+      <ul class="lst">
+        <li>Дополнительные локомотивы, стрелочные переводы, датчики и элементы инфраструктуры</li>
+        <li>Собственные программные модули</li>
+        <li>Новые алгоритмы автономного управления</li>
+        <li>Новые объекты и классы для компьютерного зрения</li>
+        <li>Диагностические системы, светофоры и системы оповещения</li>
+        <li>Собственные образовательные кейсы и лабораторные работы</li>
+        <li>Более сложная инфраструктура и моделирование производственных ситуаций</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section class="band alt" id="business">
+  <div class="wrap">
+    <div class="split">
+      <header>
+        <p class="kicker"><span class="n">08</span> Клиенты и продажи</p>
+        <h2>B2B и B2G для образования</h2>
+        <p class="muted" style="font-size:.9375rem">Комплексное решение для образовательных организаций. Экономика, цены и каналы продаж прорабатываются в акселераторе.</p>
+      </header>
+      <div class="two">
+        <div>
+          <h3>Кто покупает</h3>
+          <ul class="lst">
+            <li>Технические и транспортные университеты</li>
+            <li>Колледжи и инженерные школы</li>
+            <li>Центры дополнительного профессионального образования</li>
+            <li>Образовательные лаборатории и научные подразделения</li>
+          </ul>
+        </div>
+        <div>
+          <h3>Что покупают</h3>
+          <ul class="lst">
+            <li>Базовый комплект</li>
+            <li>Дополнительные аппаратные модули</li>
+            <li>Программные функции</li>
+            <li>Образовательные пакеты</li>
+            <li>Техническая поддержка и обновления</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="band" id="status">
+  <div class="wrap">
+    <div class="split" style="margin-bottom:clamp(32px,5vw,56px)">
+      <header>
+        <p class="kicker"><span class="n">09</span> Статус разработки</p>
+        <h2>Что уже есть и что дальше</h2>
+      </header>
+      <p class="prose muted">Проект начинается с работающего аппаратного IoT-прототипа. Остальное разделено по степени готовности, чтобы не выдавать планы за результат.</p>
+    </div>
+
+    <div class="road">
+      <div class="col real">
+        <div class="hd"><i class="dot real"></i><h3>Реализовано</h3></div>
+        <p class="sub">Работающий прототип</p>
+        <ul>
+          <li>Железнодорожная модель с рельсами и локомотивами</li>
+          <li>Собственная электроника в локомотивах</li>
+          <li>Дистанционное управление со смартфона</li>
+          <li>Стрелочные переводы, управляемые по сети</li>
+        </ul>
+      </div>
+      <div class="col next">
+        <div class="hd"><i class="dot next"></i><h3>Следующий этап</h3></div>
+        <p class="sub">Планируется разработка</p>
+        <ul>
+          <li>Компьютерное зрение: камеры и модели машинного обучения распознают подвижной состав и элементы инфраструктуры</li>
+          <li>Определение положения и состояния объектов</li>
+          <li>Автоматическое управление скоростью локомотивов, стрелками и маршрутами</li>
+          <li>Базовая комплектация с готовыми лабораторными работами</li>
+        </ul>
+      </div>
+      <div class="col later">
+        <div class="hd"><i class="dot later"></i><h3>Перспектива</h3></div>
+        <p class="sub">Направления развития</p>
+        <ul>
+          <li>Автономное движение нескольких поездов</li>
+          <li>Предотвращение конфликтных ситуаций, диспетчеризация и оптимизация движения</li>
+          <li>Блочное программирование рядом с текстовым</li>
+          <li>Свои классы распознавания, датасеты и диагностические посты от студентов</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="split" style="margin-top:clamp(48px,7vw,80px)">
+      <header>
+        <p class="kicker"><span class="n">10</span> Гипотезы</p>
+        <h2>Что проверяем в акселераторе</h2>
+      </header>
+      <ul class="lst">
+        <li>Проблема практической подготовки значима для конкретных заказчиков, а не только в общем исследовании</li>
+        <li>Один комплекс применим на разных направлениях подготовки и в разных дисциплинах</li>
+        <li>Образовательные организации готовы закупать модульные комплексы такого типа</li>
+        <li>Себестоимость, цены и состав комплектаций позволяют построить жизнеспособную экономику</li>
+      </ul>
+    </div>
+
+    <div class="split" style="margin-top:clamp(40px,6vw,64px)">
+      <header>
+        <p class="kicker"><span class="n">11</span> Трек акселератора</p>
+        <h2>Над чем работаем сейчас</h2>
+      </header>
+      <dl class="rows">
+        <div>
+          <dt>Проблемные интервью</dt>
+          <dd><p>Общаемся с кафедрами автоматизации, ИТ и транспорта в вузах и колледжах, чтобы подтвердить спрос и требования к лабораторным практикумам.</p></dd>
+        </div>
+        <div>
+          <dt>Продуктовые комплектации</dt>
+          <dd><p>Определяем состав базового комплекта и модулей расширения (CV-камеры, лазерные посты, дополнительные локомотивы) под бюджеты учебных лабораторий.</p></dd>
+        </div>
+        <div>
+          <dt>Юнит-экономика и B2B/B2G</dt>
+          <dd><p>Считаем себестоимость аппаратной части, моделируем ценообразование, каналы выхода на образовательные организации и дорожную карту пилотных внедрений.</p></dd>
+        </div>
+      </dl>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <span>РельсЛаб · рабочее название · v6.0</span>
+    <span>Страница описывает концепцию проекта для акселератора. Рыночные оценки и образовательные эффекты ещё предстоит подтвердить.</span>
+  </div>
+</footer>
+
+<script src="js/core.js"></script>
+<script src="js/fx.js"></script>
+<script src="js/pyapi.js"></script>
+<script src="js/sim.js"></script>
+<script src="js/builder.js"></script>
+</body>
+</html>

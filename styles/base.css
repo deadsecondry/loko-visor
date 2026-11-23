@@ -1,0 +1,256 @@
+﻿/* ============================================================
+   База: reset, типографика, каркас, шапка, hero, футер
+   ============================================================ */
+
+*,*::before,*::after{box-sizing:border-box}
+
+html{
+  scroll-behavior:smooth;
+  scroll-padding-top:calc(var(--top-h) + 16px);
+  -webkit-text-size-adjust:100%;
+}
+
+body{
+  margin:0;
+  font:400 1.0625rem/1.7 var(--f-body);
+  background:var(--bg);
+  color:var(--fg);
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+
+img,svg{max-width:100%}
+[hidden]:not([hidden="until-found"]){display:none!important}
+a{color:inherit}
+button,input,select,textarea{font:inherit;color:inherit}
+
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:var(--r-xs)}
+::selection{background:var(--accent);color:var(--accent-ink)}
+
+/* ---- Каркас ---- */
+.wrap{
+  max-width:1240px;
+  margin-inline:auto;
+  padding-inline:max(var(--s5),env(safe-area-inset-left,0px));
+}
+.band{padding-block:clamp(var(--s7),7vw,104px)}
+.band.alt{background:var(--bg-2);border-block:1px solid var(--line)}
+.band.tight{padding-block:clamp(var(--s5),4vw,var(--s6))}
+
+/* Заголовок секции — над контентом во всю ширину */
+.split{
+  display:grid;
+  grid-template-columns:minmax(0,1fr);
+  gap:var(--s6);
+  align-items:start;
+}
+.split > header{display:grid;gap:var(--s3);max-width:64ch}
+.split.wide > header{position:static}
+
+.two{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:var(--s5) var(--s6)}
+.row{display:flex;align-items:center;gap:var(--s2);flex-wrap:wrap}
+.row.between{justify-content:space-between}
+.sep{border:0;border-top:1px solid var(--line);margin:0}
+
+/* ---- Типографика ---- */
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;margin:0}
+h1{font-weight:800;font-size:clamp(2.1rem,5.6vw,3.85rem);line-height:1.02;letter-spacing:-.035em}
+h2{font-weight:800;font-size:clamp(1.5rem,3.1vw,2.15rem);line-height:1.1;letter-spacing:-.025em}
+h3{font-weight:700;font-size:1rem;line-height:1.35;letter-spacing:-.01em}
+p{margin:0}
+
+.kicker{
+  display:inline-flex;align-items:center;gap:9px;width:max-content;
+  font:600 .6875rem/1 var(--f-mono);
+  letter-spacing:.16em;text-transform:uppercase;
+  color:var(--fg-3);
+  padding:6px 13px 6px 11px;
+  border:1px solid var(--accent-line);
+  border-radius:var(--r-pill);
+  background:var(--accent-soft);
+  margin:0;
+}
+.kicker::before{
+  content:'';width:6px;height:6px;border-radius:50%;
+  background:var(--accent);flex:none;
+}
+.kicker .n{color:var(--accent-text);letter-spacing:.06em}
+
+.lead{font-size:clamp(1.0625rem,1.6vw,1.3125rem);line-height:1.62;color:var(--fg-2);max-width:46em}
+.muted{color:var(--fg-2)}
+.mono{font-family:var(--f-mono)}
+.prose{max-width:48em;display:grid;gap:var(--s3)}
+.caption{font-size:.875rem;color:var(--fg-3);max-width:64em;line-height:1.6}
+.hint{font-size:.8125rem;color:var(--fg-3);line-height:1.55}
+.sub-meta{font:500 .6875rem/1.45 var(--f-mono);color:var(--fg-3);letter-spacing:.03em}
+.source{font:400 .75rem/1.65 var(--f-mono);color:var(--fg-3);max-width:62em}
+
+/* ============================================================
+   Шапка: логотип-плитка · пилюли-навигация · инструменты,
+   ниже — тонкая полоса статуса систем
+   ============================================================ */
+.top{
+  position:sticky;top:0;z-index:60;
+  background:var(--bg);
+  border-bottom:1px solid var(--line);
+  box-shadow:var(--sh-1);
+}
+@supports (top:env(safe-area-inset-top)){.top{top:env(safe-area-inset-top)}}
+
+.top-in{
+  display:grid;
+  grid-template-columns:auto minmax(0,1fr) auto;
+  grid-template-areas:
+    "brand nav tools"
+    "sys   sys sys";
+  align-items:center;
+  gap:8px var(--s5);
+  padding-block:12px 0;
+}
+
+.brand{
+  grid-area:brand;
+  display:flex;align-items:center;gap:10px;flex:none;
+  font:800 1rem/1 var(--f-display);
+  text-decoration:none;letter-spacing:-.02em;
+}
+.brand svg{
+  flex:none;width:30px;height:30px;padding:6px;
+  background:var(--accent);color:var(--accent-ink);
+  border-radius:var(--r);
+  box-shadow:var(--sh-accent);
+}
+.brand svg path{stroke:var(--accent-ink)}
+.brand em{
+  font-style:normal;font:600 .5625rem/1 var(--f-mono);
+  letter-spacing:.14em;color:var(--fg-3);text-transform:uppercase;
+  padding:4px 7px;border:1px solid var(--line);border-radius:var(--r-pill);
+}
+
+.nav{
+  grid-area:nav;
+  display:flex;flex-wrap:wrap;gap:2px;
+  justify-content:flex-end;
+  font:600 .75rem/1 var(--f-body);
+}
+.nav a{
+  text-decoration:none;color:var(--fg-2);
+  padding:8px 12px;border-radius:var(--r-pill);
+  border:1px solid transparent;
+  transition:color .16s,background .16s,border-color .16s;
+}
+.nav a:hover{color:var(--accent-text);background:var(--accent-soft);border-color:var(--accent-line)}
+
+.sysbar{
+  grid-area:sys;
+  display:flex;align-items:center;gap:8px;
+  margin-top:10px;padding-block:8px;
+  border-top:1px solid var(--line);
+  font:600 .625rem/1 var(--f-mono);
+  letter-spacing:.08em;text-transform:uppercase;
+}
+.sys{
+  display:inline-flex;align-items:center;gap:6px;
+  color:var(--fg-3);white-space:nowrap;
+  padding:4px 10px;border-radius:var(--r-pill);
+  border:1px solid var(--line);background:var(--panel-2);
+}
+.sys i{
+  width:6px;height:6px;border-radius:50%;flex:none;
+  background:var(--line-2);
+  transition:background .2s;
+}
+.sys b{font-weight:600;color:var(--fg-3)}
+.sys.on{border-color:var(--accent-line);background:var(--accent-soft)}
+.sys.on i{background:var(--accent)}
+.sys.on b{color:var(--accent-text)}
+
+.top-tools{grid-area:tools;display:flex;align-items:center;gap:var(--s2);flex:none}
+
+.clock{
+  font:500 .75rem/1 var(--f-mono);
+  font-variant-numeric:tabular-nums;
+  color:var(--fg-2);letter-spacing:.06em;
+  padding:7px 11px;border-radius:var(--r-pill);
+  background:var(--panel-2);border:1px solid var(--line);
+}
+
+.tool-btn{
+  font:600 .6875rem/1 var(--f-body);letter-spacing:.02em;
+  padding:9px 13px;
+  border:1px solid var(--line-2);background:var(--panel);
+  color:var(--fg-2);border-radius:var(--r-pill);cursor:pointer;
+  transition:border-color .16s,color .16s,background .16s,box-shadow .16s;
+}
+.tool-btn:hover{border-color:var(--accent-text);color:var(--accent-text);box-shadow:var(--sh-1)}
+.tool-btn.on{border-color:var(--accent-text);color:var(--accent-text);background:var(--accent-soft)}
+
+/* ============================================================
+   Hero: крупный заголовок, ниже — лента «паспорта полигона»
+   ============================================================ */
+.hero{padding-top:clamp(var(--s7),6vw,var(--s8));padding-bottom:clamp(var(--s5),4vw,var(--s6))}
+.hero-grid{display:grid;grid-template-columns:minmax(0,1fr);gap:clamp(var(--s6),5vw,var(--s7))}
+.hero-copy{display:grid;gap:var(--s4);max-width:58em}
+.hero h1{max-width:19em}
+.hero .lead{max-width:42em}
+
+.marks{display:flex;flex-wrap:wrap;gap:var(--s2);margin-top:var(--s1)}
+.mark{
+  display:inline-flex;align-items:center;gap:8px;
+  font:600 .75rem/1.25 var(--f-body);
+  padding:8px 14px;
+  border:1px solid var(--line);border-radius:var(--r-pill);
+  background:var(--panel-2);color:var(--fg-2);
+}
+.dot{display:inline-block;width:7px;height:7px;border-radius:50%;flex:none}
+.dot.real{background:var(--go)}
+.dot.next{border:1px solid var(--accent);background:linear-gradient(90deg,var(--accent) 50%,transparent 50%)}
+.dot.later{border:1px solid var(--fg-3);background:transparent}
+
+/* Паспорт полигона — горизонтальная лента плиток */
+.spec{
+  display:grid;margin:0;
+  grid-template-columns:repeat(auto-fit,minmax(min(100%,150px),1fr));
+  gap:var(--s3);
+}
+.spec > div{
+  display:grid;gap:6px;align-content:start;
+  padding:var(--s4) var(--s4) calc(var(--s4) - 2px);
+  background:var(--panel);
+  border:1px solid var(--line);
+  border-top:3px solid var(--accent);
+  border-radius:var(--r-3);
+  box-shadow:var(--sh-1);
+}
+.spec dt{
+  font:600 .5625rem/1.3 var(--f-mono);letter-spacing:.14em;
+  text-transform:uppercase;color:var(--fg-3);
+}
+.spec dd{
+  margin:0;
+  font:800 clamp(1.25rem,2.4vw,1.75rem)/1.1 var(--f-display);
+  font-variant-numeric:tabular-nums;color:var(--fg);
+  letter-spacing:-.02em;
+}
+.spec dd small{
+  display:block;margin-top:4px;
+  font:500 .6875rem/1.4 var(--f-mono);
+  color:var(--fg-3);letter-spacing:0;
+}
+
+/* ---- Футер ---- */
+.foot{
+  margin-top:var(--s8);
+  padding-block:var(--s6);
+  background:var(--panel-2);
+  border-top:1px solid var(--line);
+}
+.foot .wrap{
+  display:grid;grid-template-columns:auto minmax(0,1fr);
+  gap:var(--s2) var(--s6);align-items:baseline;
+  font:400 .75rem/1.7 var(--f-mono);color:var(--fg-3);
+}
+.foot span:first-child{
+  font:800 .875rem/1.4 var(--f-display);
+  color:var(--fg);letter-spacing:-.01em;
+}

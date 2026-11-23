@@ -1,0 +1,109 @@
+/* ============================================================
+   РельсЛаб · Тема «Оранж-лайн»
+   Белое полотно + оранжевый акцент. Все цвета, радиусы, тени и
+   шрифты живут только здесь — стиль меняется в одном месте.
+   ============================================================ */
+
+:root{
+  color-scheme: light;
+
+  /* --- Акцент (оранжевая гамма) --- */
+  --accent:      #ff6b00;
+  --accent-2:    #ff8c1a;
+  --accent-ink:  #2b1200;   /* текст на оранжевом: контраст ≥ 6:1 */
+  --accent-text: #bf4d00;   /* оранжевый ТЕКСТ на белом: контраст ≥ 4.6:1 */
+  --accent-soft: rgba(255,107,0,.10);
+  --accent-soft-2: rgba(255,107,0,.20);
+  --accent-line: rgba(255,107,0,.42);
+
+  /* Псевдонимы прежней палитры (используются в разметке и JS) */
+  --amber:      var(--accent);
+  --amber-ink:  var(--accent-2);
+  --amber-soft: var(--accent-soft);
+  --on-amber:   var(--accent-ink);
+
+  /* --- Поверхности --- */
+  --bg:      #ffffff;
+  --bg-2:    #fff7f2;
+  --panel:   #ffffff;
+  --panel-2: #fffaf6;
+  --stage:   #fffcf9;
+  --line:    #ece5df;
+  --line-2:  #d8cec4;
+  --grid:    rgba(255,107,0,.11);
+
+  /* --- Текст --- */
+  --fg:   #17120e;
+  --fg-2: #5e564e;
+  --fg-3: #8b8177;
+
+  /* --- Сигналы и состав --- */
+  --go:       #0e8f52;
+  --stop:     #dc3a1c;
+  --t-a:      #2f6fdb;
+  --t-b:      #0f8b8d;
+  --rail:     #bfb2a5;
+  --rail-bed: #f4ece4;
+
+  /* --- Шрифты --- */
+  --f-display: 'Manrope','Arial Black',system-ui,sans-serif;
+  --f-body:    'Onest',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --f-mono:    'JetBrains Mono',ui-monospace,Menlo,Consolas,monospace;
+
+  /* --- Форма --- */
+  --r-xs:   6px;
+  --r:      10px;
+  --r-2:    14px;
+  --r-3:    20px;
+  --r-4:    28px;
+  --r-pill: 999px;
+
+  /* --- Тени --- */
+  --sh-1: 0 1px 2px rgba(23,18,14,.06);
+  --sh-2: 0 8px 24px -10px rgba(23,18,14,.16);
+  --sh-3: 0 24px 60px -26px rgba(23,18,14,.28);
+  --sh-accent: 0 10px 26px -10px rgba(255,107,0,.62);
+
+  /* --- Ритм --- */
+  --s1:4px; --s2:8px; --s3:12px; --s4:16px;
+  --s5:24px; --s6:32px; --s7:48px; --s8:64px;
+
+  --top-h: 100px;
+}
+
+/* ---- Тёмный вариант: та же оранжевая система ---- */
+:root[data-theme="dark"]{
+  color-scheme: dark;
+  --accent:      #ff7a1a;
+  --accent-2:    #ffa04d;
+  --accent-ink:  #1a0f05;
+  --accent-text: #ff9a4d;
+  --accent-soft: rgba(255,122,26,.16);
+  --accent-soft-2: rgba(255,122,26,.28);
+  --accent-line: rgba(255,122,26,.46);
+
+  --bg:      #14100d;
+  --bg-2:    #1b1613;
+  --panel:   #1e1815;
+  --panel-2: #251d19;
+  --stage:   #120e0b;
+  --line:    #332a25;
+  --line-2:  #473a33;
+  --grid:    rgba(255,122,26,.14);
+
+  --fg:   #f7f1ec;
+  --fg-2: #c0b4aa;
+  --fg-3: #8f837a;
+
+  --go:       #3fd68a;
+  --stop:     #ff6a4d;
+  --t-a:      #6aa6ff;
+  --t-b:      #3fd6d0;
+  --rail:     #7d7168;
+  --rail-bed: #241c17;
+
+  --sh-1: 0 1px 2px rgba(0,0,0,.5);
+  --sh-2: 0 10px 28px -12px rgba(0,0,0,.7);
+  --sh-3: 0 26px 64px -28px rgba(0,0,0,.85);
+  --sh-accent: 0 10px 26px -10px rgba(255,122,26,.5);
+}
